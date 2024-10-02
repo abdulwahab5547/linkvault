@@ -66,13 +66,6 @@ const LinkSection: React.FC<LinkSectionProps> = ({ section, onSectionDeleted }) 
             return null;
         }
 
-        // Create a temporary link with a temporary ID
-        const tempLink: Link = {
-            _id: `temp_${Date.now()}`,
-            title: title.trim(),
-            url: url.trim()
-        };
-
         try {
             const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/add-link`, {
                 method: 'POST',

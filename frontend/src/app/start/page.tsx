@@ -67,15 +67,15 @@ function Start() {
                     <h2 className="text-3xl font-bold mb-6 text-center">What Our Users Say</h2>
                     <div className="grid md:grid-cols-3 gap-8">
                         <div className="text-center">
-                            <p className="text-lg mb-4">"LinkVault has revolutionized how I manage my online resources. It's a game-changer!"</p>
+                            <p className="text-lg mb-4">&quot;LinkVault has revolutionized how I manage my online resources. It&apos;s a game-changer!&quot;</p>
                             <p className="font-semibold">- Hanzala Tahir</p>
                         </div>
                         <div className="text-center">
-                            <p className="text-lg mb-4">"I can't imagine going back to my old way of saving links. LinkVault is simply indispensable."</p>
+                            <p className="text-lg mb-4">&quot;I can&apos;t imagine going back to my old way of saving links. LinkVault is simply indispensable.&quot;</p>
                             <p className="font-semibold">- Hamza Abdul Rauf</p>
                         </div>
                         <div className="text-center">
-                            <p className="text-lg mb-4">"The ability to share collections of links has made collaboration with my team so much easier."</p>
+                            <p className="text-lg mb-4">&quot;The ability to share collections of links has made collaboration with my team so much easier.&quot;</p>
                             <p className="font-semibold">- Tom Cruise</p>
                         </div>
                     </div>
