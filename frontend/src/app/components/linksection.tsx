@@ -66,11 +66,13 @@ const LinkSection: React.FC<LinkSectionProps> = ({ section, onSectionDeleted }) 
             return null;
         }
 
-        console.log('Sending data:', {
-            sectionId: section._id,
-            title,
-            url
-        });
+        // Create a temporary link with a temporary ID
+        const tempLink: Link = {
+            _id: `temp_${Date.now()}`,
+            title: title.trim(),
+            url: url.trim()
+        };
+
         try {
             const response = await fetch('http://localhost:8000/api/add-link', {
                 method: 'POST',
@@ -121,6 +123,9 @@ const LinkSection: React.FC<LinkSectionProps> = ({ section, onSectionDeleted }) 
 
     const debouncedSaveSectionName = useCallback(
         (newName: string) => {
+            // Optimistically update the frontend
+            setSectionName(newName);
+
             const saveSectionName = async () => {
                 try {
                     const response = await fetch(`http://localhost:8000/api/update-section/${section._id}`, {
@@ -138,12 +143,15 @@ const LinkSection: React.FC<LinkSectionProps> = ({ section, onSectionDeleted }) 
 
                 } catch (error) {
                     console.error('Error updating section name:', error);
+                    // Revert the optimistic update if there's an error
+                    setSectionName(section.name);
+                    toast.error('Failed to update section name. Please try again.');
                 }
             };
 
             debounce(saveSectionName, 500)();
         },
-        [section._id]
+        [section._id, section.name]
     );
 
     const handleSectionNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -219,6 +227,13 @@ const LinkSection: React.FC<LinkSectionProps> = ({ section, onSectionDeleted }) 
                                         onChange={(e) => setNewLinkTitle(e.target.value)}
                                         placeholder="Enter link title"
                                         className="w-full bg-transparent outline-none text-sm mb-2"
+                                        onKeyPress={(e) => {
+                                            if (e.key === 'Enter') {
+                                                e.preventDefault();
+                                                const urlInput = e.currentTarget.nextElementSibling as HTMLInputElement;
+                                                urlInput?.focus();
+                                            }
+                                        }}
                                     />
                                     <input
                                         type="text"
@@ -226,7 +241,12 @@ const LinkSection: React.FC<LinkSectionProps> = ({ section, onSectionDeleted }) 
                                         onChange={(e) => setNewLinkUrl(e.target.value)}
                                         placeholder="Enter link URL"
                                         className="w-full bg-transparent outline-none text-sm"
-                                        onKeyPress={(e) => e.key === 'Enter' && handleSaveNewLink()}
+                                        onKeyPress={(e) => {
+                                            if (e.key === 'Enter') {
+                                                e.preventDefault();
+                                                handleSaveNewLink();
+                                            }
+                                        }}
                                     />
                                     <button onClick={handleSaveNewLink} className="mt-2 text-orange self-end">
                                         <i className="fa-solid fa-check"></i>

@@ -37,6 +37,12 @@ const LinkPart: React.FC<LinkPartProps> = ({ link, onDelete, view }) => {
     };
 
     const handleSaveLink = async (id: string, title: string, url: string) => {
+        // Optimistically update the frontend
+        const originalTitle = link.title;
+        const originalUrl = link.url;
+        link.title = title;
+        link.url = url;
+
         try {
             const response = await fetch(`http://localhost:8000/api/update-link/${id}`, {
                 method: 'PUT',
@@ -52,12 +58,22 @@ const LinkPart: React.FC<LinkPartProps> = ({ link, onDelete, view }) => {
                 throw new Error(errorData.message || 'Failed to update link');
             }
 
+            // If we reach here, the backend update was successful
+            toast.success('Link updated successfully');
+
         } catch (error) {
             console.error('Error updating link:', error);
+            // Revert the optimistic update
+            link.title = originalTitle;
+            link.url = originalUrl;
+            toast.error('Failed to update link. Please try again.');
         }
     };
 
     const handleDeleteLink = async () => {
+        // Optimistically update the frontend
+        onDelete(link._id);
+
         try {
             const response = await fetch(`http://localhost:8000/api/delete-link/${link._id}`, {
                 method: 'DELETE',
@@ -71,9 +87,11 @@ const LinkPart: React.FC<LinkPartProps> = ({ link, onDelete, view }) => {
                 throw new Error(errorData.message || 'Failed to delete link');
             }
 
-            onDelete(link._id);
+            toast.success('Link deleted successfully');
         } catch (error) {
             console.error('Error deleting link:', error);
+            // Revert the optimistic update
+            onDelete(link._id); // Remove the second argument
             toast.error(error instanceof Error ? error.message : 'An unexpected error occurred');
         }
     };

@@ -151,8 +151,11 @@ function Settings() {
     };
 
     return (
-        <div className="max-w-[1450px] m-auto px-8 pb-5">
-            <Navbar />
+        <div className="max-w-[1450px] m-auto px-0 md:px-8 pb-5">
+            <div className='px-4 md:px-0'>
+                <Navbar />
+            </div>
+            
             <div className='flex-col md:flex-row flex gap-6'>
                 <div className='bg-light dark:bg-dark rounded-3xl p-8 mt-3 md:w-[33%] m-auto'>
                     <div className="">

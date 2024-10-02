@@ -19,12 +19,14 @@ interface Section {
 const Links: React.FC = () => {
     const [linkSections, setLinkSections] = useState<Section[]>([]);
     const [newSectionName, setNewSectionName] = useState<string>('');
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
         fetchSectionsAndLinks();
     }, []);
 
     const fetchSectionsAndLinks = async (): Promise<void> => {
+        setIsLoading(true);
         try {
             const response = await fetch('http://localhost:8000/api/sections', {
                 method: 'GET',
@@ -42,6 +44,8 @@ const Links: React.FC = () => {
         } catch (error) {
             console.error('Error fetching sections and links:', error);
             toast.error('Failed to load sections and links');
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -50,6 +54,16 @@ const Links: React.FC = () => {
             toast.error('Please enter a name for the new section');
             return;
         }
+
+        // Optimistically update the frontend
+        const tempId = Date.now().toString(); // Temporary ID for the new section
+        const newSection: Section = {
+            _id: tempId,
+            name: newSectionName,
+            links: []
+        };
+        setLinkSections(prevSections => [...prevSections, newSection]);
+        setNewSectionName('');
 
         try {
             const response = await fetch('http://localhost:8000/api/add-section', {
@@ -66,14 +80,32 @@ const Links: React.FC = () => {
                 throw new Error(errorData.message || 'Failed to add new link section');
             }
 
-            await fetchSectionsAndLinks(); // Fetch sections again after adding a new one
-            setNewSectionName('');
+            const data = await response.json();
+            // Update the frontend with the actual ID from the backend
+            setLinkSections(prevSections => 
+                prevSections.map(section => 
+                    section._id === tempId ? { ...section, _id: data.section._id } : section
+                )
+            );
             toast.success('Section added');
         } catch (error) {
             console.error('Failed to add new link section:', error);
+            // Revert the frontend changes if the backend request fails
+            setLinkSections(prevSections => prevSections.filter(section => section._id !== tempId));
             toast.error(error instanceof Error ? error.message : 'An unexpected error occurred');
         }
     };
+
+    const LinkSectionSkeleton = () => (
+        <div className="bg-lessLight dark:bg-lessDark rounded-3xl p-5 w-full md:w-[48%] animate-pulse">
+            <div className="h-6 bg-light dark:bg-dark rounded w-1/4 mb-4"></div>
+            <div className="space-y-2">
+                {[...Array(3)].map((_, index) => (
+                    <div key={index} className="h-4 bg-light dark:bg-dark rounded w-full"></div>
+                ))}
+            </div>
+        </div>
+    );
 
     return (
         <div className="bg-light dark:bg-dark rounded-3xl p-5 w-full">
@@ -89,6 +121,12 @@ const Links: React.FC = () => {
                             type="text"
                             value={newSectionName}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewSectionName(e.target.value)}
+                            onKeyPress={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                                if (e.key === 'Enter') {
+                                    e.preventDefault();
+                                    addLinkSection();
+                                }
+                            }}
                             placeholder="New section name"
                             className="mr-2 w-32 md:w-auto px-3 py-2 bg-lessLight dark:bg-lessDark rounded-full focus:outline-none focus:ring-2 focus:ring-orange"
                         />
@@ -102,27 +140,34 @@ const Links: React.FC = () => {
                 </div>
                 
                 <div className='py-3 pt-5'>
-                    {linkSections.reduce((rows: JSX.Element[], section: Section, index: number) => {
-                        if (index % 2 === 0) {
-                            rows.push(
-                                <div key={`row-${index}`} className='flex flex-col md:flex-row gap-4 py-2'>
-                                    <LinkSection 
-                                        key={`${section._id}-main`} 
-                                        section={section} 
-                                        onSectionDeleted={fetchSectionsAndLinks} 
-                                    />
-                                    {linkSections[index + 1] && (
+                    {isLoading ? (
+                        <div className='flex flex-col md:flex-row gap-4 py-2'>
+                            <LinkSectionSkeleton />
+                            <LinkSectionSkeleton />
+                        </div>
+                    ) : (
+                        linkSections.reduce((rows: JSX.Element[], section: Section, index: number) => {
+                            if (index % 2 === 0) {
+                                rows.push(
+                                    <div key={`row-${index}`} className='flex flex-col md:flex-row gap-4 py-2'>
                                         <LinkSection 
-                                            key={`${linkSections[index + 1]._id}-pair`} 
-                                            section={linkSections[index + 1]} 
+                                            key={`${section._id}-main`} 
+                                            section={section} 
                                             onSectionDeleted={fetchSectionsAndLinks} 
                                         />
-                                    )}
-                                </div>
-                            );
-                        }
-                        return rows;
-                    }, [])}
+                                        {linkSections[index + 1] && (
+                                            <LinkSection 
+                                                key={`${linkSections[index + 1]._id}-pair`} 
+                                                section={linkSections[index + 1]} 
+                                                onSectionDeleted={fetchSectionsAndLinks} 
+                                            />
+                                        )}
+                                    </div>
+                                );
+                            }
+                            return rows;
+                        }, [])
+                    )}
                 </div>
             </div>
         </div>

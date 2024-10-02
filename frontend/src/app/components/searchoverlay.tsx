@@ -72,7 +72,7 @@ function SearchOverlay({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div ref={overlayRef} className="relative bg-white bg-light dark:bg-dark p-6 rounded-3xl h-[70%] w-[90%] sm:w-[400px] max-w-[400px]">
+            <div ref={overlayRef} className="relative bg-white bg-light dark:bg-dark p-6 rounded-3xl h-[70%] w-[90%] max-h-[700px] sm:w-[400px] max-w-[400px] flex flex-col">
                 <div className="flex items-center justify-center absolute top-4 right-4">
                     <i className="fa-solid fa-xmark text-lg cursor-pointer" onClick={onClose}></i>
                 </div>
@@ -86,7 +86,7 @@ function SearchOverlay({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                         autoFocus
                     />
                 </div>
-                <div className="max-h-auto overflow-y-auto">
+                <div className="flex-1 overflow-y-auto">
                     {searchResults.map((result) => (
                         <div key={result.id} className="mb-2 p-2 px-4 rounded-3xl bg-lessLight dark:bg-lessDark">
                             <h3 className="font-bold">{result.title}</h3>

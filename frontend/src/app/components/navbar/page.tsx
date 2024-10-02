@@ -33,7 +33,7 @@ function Navbar(){
         <div className="py-3">
             <div className="flex justify-between items-stretch gap-3 md:gap-5 h-14">
                 <div className="flex rounded-3xl bg-light dark:bg-dark p-2 px-3 md:px-8 items-center justify-center cursor-pointer">
-                    <Image src={Icon} alt="LinkVault" width={30} height={30} className="w-8 h-8 md:w-[30px] md:h-[30px] md:mr-2 rounded-full"/>
+                    <Image src={Icon} alt="LinkVault" width={30} height={30} className="min-w-8 min-h-8 md:w-[30px] md:h-[30px] md:mr-2 rounded-full"/>
                     <p className="font-bold text-lg hidden md:block">LinkVault</p>
                 </div>
                 <div className="rounded-3xl bg-light dark:bg-dark p-2 px-5 w-full flex justify-center items-center">

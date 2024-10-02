@@ -1,7 +1,18 @@
-import Main from './main/page'
+"use client"
+
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import Start from './start/page';
 
 export default function Home() {
-  return (
-    <Main />
-  );
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      router.push('/main');
+    }
+  }, [router]);
+
+  return <Start />;
 }
