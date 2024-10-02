@@ -28,7 +28,7 @@ const Links: React.FC = () => {
     const fetchSectionsAndLinks = async (): Promise<void> => {
         setIsLoading(true);
         try {
-            const response = await fetch('http://localhost:8000/api/sections', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/sections`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -66,7 +66,7 @@ const Links: React.FC = () => {
         setNewSectionName('');
 
         try {
-            const response = await fetch('http://localhost:8000/api/add-section', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/add-section`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

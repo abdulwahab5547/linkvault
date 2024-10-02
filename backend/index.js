@@ -15,16 +15,11 @@ const SECRET_KEY = process.env.SECRET_KEY;
 // Middleware
 
 app.use(json());
-// app.use(cors({
-//   origin: ["http://localhost:3000/receiptify-app-frontend"],
-//   methods: ["POST", "GET"],
-//   credentials: true
-// }));
 
 app.use(cors({
-    origin: '*',
-    methods: ['POST', 'GET', 'PUT', 'DELETE', 'OPTIONS'],
-    credentials: true
+  origin: ["https://linkvault-zeta.vercel.app", "http://localhost:3000"],
+  methods: ['POST', 'GET', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true
 }));
 
 // Authentication middleware

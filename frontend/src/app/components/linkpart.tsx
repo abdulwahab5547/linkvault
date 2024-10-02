@@ -44,7 +44,7 @@ const LinkPart: React.FC<LinkPartProps> = ({ link, onDelete, view }) => {
         link.url = url;
 
         try {
-            const response = await fetch(`http://localhost:8000/api/update-link/${id}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/update-link/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -75,7 +75,7 @@ const LinkPart: React.FC<LinkPartProps> = ({ link, onDelete, view }) => {
         onDelete(link._id);
 
         try {
-            const response = await fetch(`http://localhost:8000/api/delete-link/${link._id}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/delete-link/${link._id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`

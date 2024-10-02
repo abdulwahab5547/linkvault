@@ -74,7 +74,7 @@ const LinkSection: React.FC<LinkSectionProps> = ({ section, onSectionDeleted }) 
         };
 
         try {
-            const response = await fetch('http://localhost:8000/api/add-link', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/add-link`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -128,7 +128,7 @@ const LinkSection: React.FC<LinkSectionProps> = ({ section, onSectionDeleted }) 
 
             const saveSectionName = async () => {
                 try {
-                    const response = await fetch(`http://localhost:8000/api/update-section/${section._id}`, {
+                    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/update-section/${section._id}`, {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',

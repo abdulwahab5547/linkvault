@@ -27,7 +27,7 @@ function SearchOverlay({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
             }
 
             try {
-                const response = await fetch(`http://localhost:8000/api/search?q=${searchTerm}`, {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/search?q=${searchTerm}`, {
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('token')}`
                     }

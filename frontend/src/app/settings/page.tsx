@@ -38,7 +38,7 @@ function Settings() {
 
     const fetchProfileInfo = async () => {
         try {
-            const response = await fetch('http://localhost:8000/api/profile', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/profile`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -114,7 +114,7 @@ function Settings() {
                 ...(formData.newPassword && { password: formData.newPassword })
             };
 
-            const response = await fetch('http://localhost:8000/api/update-profile', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/update-profile`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

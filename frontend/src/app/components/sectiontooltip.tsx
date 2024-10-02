@@ -15,7 +15,7 @@ const SectionTooltip: React.FC<SectionTooltipProps> = ({ sectionId, onDelete, on
         onSectionDeleted();
 
         try {
-            const response = await fetch(`http://localhost:8000/api/delete-section/${sectionId}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/delete-section/${sectionId}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
